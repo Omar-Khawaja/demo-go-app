@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-# Environment variables NODE_IP and PORT must be set or passed in
+// Environment variables NODE_IP and PORT must be set or passed in
 
 var version = 3
 var color = "green"
