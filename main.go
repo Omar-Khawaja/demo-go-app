@@ -2,28 +2,32 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"os"
 )
 
 // Environment variables NODE_IP and PORT must be set or passed in
 
+// Pick the version you want to display and the color you wish to display
+// it in
 var version = 3
 var color = "green"
-var node = os.Getenv("NODE_IP")
-var intro = fmt.Sprintf(
-	"<!DOCTYPE html>"+
-		"<html>"+
-		"<body>"+
 
-		"<h1 style=\"color:%s;\">Welcome! This is <i>version %d</i> of your application!</h1>"+
-		"<h1 style=\"color:%s;\">You are on node %v"+
+// HTML files that need to be parsed
+var files = []string{"index.html"}
 
-		"</body>"+
-		"</html>", color, version, color, node)
+var t = template.Must(template.ParseFiles(files...))
+
+type Intro struct {
+	Version int
+	Color   string
+	Node    string
+}
 
 func giveIntro(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, intro)
+	intro := Intro{version, color, os.Getenv("NODE_IP")}
+	t.Execute(w, intro)
 }
 
 func main() {
